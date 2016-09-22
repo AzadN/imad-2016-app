@@ -2,6 +2,6 @@ var button=document.getElementById('counter');
 button.onclick=function()
 {
   counter+=1;
-  var span=document.getElementByID('count');
+  var span=document.getElementById('count');
   span.InnerHTML=counter.toString();
 };
