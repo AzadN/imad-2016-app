@@ -78,7 +78,15 @@ app.post('/login',function(req,res){
          var salt = dbString.split('$')[2];
          var hashedPassword=hash(password,salt); //Hash based on password submitted & original salt
          if(hashedPassword=== dbString){
+             
+             //Set the session
+             req.session.auth={userId: result.rows[0].id};
+             //set cookie with session id
+             //internallh, on the server side, it maps the session id to an object
+             //{auth : {userId}}
+             
              res.send('Credentials correct');
+             
              
          }else{
              res.send(403).send('Username/password is invalid');
@@ -88,7 +96,14 @@ app.post('/login',function(req,res){
       });
 });
 
-
+app.get('/check-login',function(req,res){
+   if(req.session && req.session.auth && req.session.auth.userID) {
+       res.send('You are logged in: ' +req.session.auth.userID.toString());
+   }
+   else{
+       res.send('You are not logged in');
+   }
+});
 
 var pool=new Pool(config);
 app.get('/test-db',function(req,res)
