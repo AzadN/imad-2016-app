@@ -2,6 +2,7 @@ var express = require('express');
 var morgan = require('morgan');
 var path = require('path');
 var Pool=require('pg').Pool;
+var crypto=required('crypto');
 var config={
     user: 'azadn',
     database: 'azadn',
@@ -25,6 +26,15 @@ app.get('/submit-name',function(req,res)
     names.push(name);
     //JSON:JavaScript Object Notation
     res.send(JSON.stringify(names));
+});
+
+function hash(input,salt){
+    var hashed=crypto.pbkdf2Sync(input,salt,10000,512,'sha12');
+    return hashed.toString('hex');
+}
+app.get('/hash/:input',function(req,res){
+   var hashedString=hash(req.params.inpu,'this-is-some-ramdom-string');
+   res.send(hashedString);
 });
 
 var pool=new Pool(config);
